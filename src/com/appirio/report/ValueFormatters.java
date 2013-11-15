@@ -62,6 +62,10 @@ public class ValueFormatters {
 
 		// set return value to be as formatted double value
 		try {
+		    if (value == null) {
+                return "";
+            }
+
 			double doubleValue = nf.parse(value).doubleValue();
 
 			returnValue = decimalFormat.format(doubleValue);

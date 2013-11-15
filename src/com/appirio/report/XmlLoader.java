@@ -24,6 +24,7 @@ public class XmlLoader {
 
 		digester.addObjectCreate("QueryResult/records", com.appirio.report.FlightLine.class);
 		digester.addBeanPropertySetter("QueryResult/records/Additional_Cost__c", "additionalCost");
+		digester.addBeanPropertySetter("QueryResult/records/Additional_Cost_Type__c", "additionalCostType");
 		digester.addBeanPropertySetter("QueryResult/records/Average_Daily_Spots__c", "averageDailySpots");
 		digester.addBeanPropertySetter("QueryResult/records/City__c", "city");
 		digester.addBeanPropertySetter("QueryResult/records/Comments__c", "comments");
@@ -78,7 +79,8 @@ public class XmlLoader {
 		digester.addBeanPropertySetter("QueryResult/records/X4_Wk_Floor__c", "x4WkFloor");
 		digester.addBeanPropertySetter("QueryResult/records/X4_Wk_Proposed_Price__c", "x4WkProposedPrice");
 		digester.addBeanPropertySetter("QueryResult/records/Zip__c", "zip");
-
+		digester.addBeanPropertySetter("QueryResult/records/Media_Category__c", "mediaCategory");
+		
 		digester.addObjectCreate("QueryResult/records/Child_Flight_Lines__r/records", com.appirio.report.FlightLine.class);
 		digester.addBeanPropertySetter("QueryResult/records/Child_Flight_Lines__r/records/Parent_Flight_Line__c", "parentFlightLine");
 		digester.addBeanPropertySetter("QueryResult/records/Child_Flight_Lines__r/records/MapLocation_Number__c", "mapLocationNumber");

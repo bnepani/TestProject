@@ -417,7 +417,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									SummaryLevelEnum.Market))
+									SummaryLevelEnum.Market, true))
 					.setDataSource(audienceMarketSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadAudienceExpression)
@@ -433,7 +433,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									SummaryLevelEnum.Package))
+									SummaryLevelEnum.Package, showTotalProgramSummary))
 					.setDataSource(audiencePackageSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadAudienceExpression)
@@ -483,7 +483,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									locationMapExists, SummaryLevelEnum.Market))
+									locationMapExists, SummaryLevelEnum.Market, true))
 					.setDataSource(locationMarketSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadLocationExpression)
@@ -499,7 +499,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									locationMapExists, SummaryLevelEnum.Package))
+									locationMapExists, SummaryLevelEnum.Package, showTotalProgramSummary))
 					.setDataSource(locationPackageSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadLocationExpression)
@@ -547,7 +547,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									SummaryLevelEnum.Market))
+									SummaryLevelEnum.Market, true))
 					.setDataSource(rotaryMarketSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadRotaryExpression)
@@ -563,7 +563,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									columnTitleStyle, columnStyle, true,
-									SummaryLevelEnum.Package))
+									SummaryLevelEnum.Package, showTotalProgramSummary))
 					.setDataSource(rotaryPackageSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadRotaryExpression)
@@ -613,7 +613,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									null, columnTitleStyle, columnStyle, true,
-									true, SummaryLevelEnum.Market))
+									true, SummaryLevelEnum.Market, true))
 					.setDataSource(networkMarketSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadNetworkExpression)
@@ -629,7 +629,7 @@ public class PdfReporter extends Reporter {
 									dataSourceFileName,
 									packageMarketFlightPreviousRecordExpression,
 									null, columnTitleStyle, columnStyle, true,
-									true, SummaryLevelEnum.Package))
+									true, SummaryLevelEnum.Package, showTotalProgramSummary))
 					.setDataSource(networkPackageSummaryDataSource)
 					.setPrintWhenExpression(
 							packageMarketFlightPreviousRecordHadNetworkExpression)
@@ -645,35 +645,28 @@ public class PdfReporter extends Reporter {
 				group.footer(audienceFlightSummarySubreport);
 			if (showIndividualMarketSummary)
 				group.footer(audienceMarketSummarySubreport);
-			if (showTotalProgramSummary)
+			//if (showTotalProgramSummary)
 				group.footer(audiencePackageSummarySubreport);
-			System.out.println(" ******	 adding   location sub rpeort ");
-			locationSubreport.setPrintWhenDetailOverflows(true);
 			group.footer(locationSubreport);
-			System.out.println(" ******	 added   location sub rpeort ");
-			if (showIndividualFlightSummary) 
+			if (showIndividualFlightSummary)
 				group.footer(locationFlightSummarySubreport);
 			if (showIndividualMarketSummary)
 				group.footer(locationMarketSummarySubreport);
-			if (showTotalProgramSummary) {
-				System.out.println(" ****** adding  locationPackageSummarySubreport");
+			//if (showTotalProgramSummary)
 				group.footer(locationPackageSummarySubreport);
-				System.out.println(" ****** added locationPackageSummarySubreport");
-				
-		    }
 			group.footer(rotarySubreport);
-			if (showIndividualFlightSummary) 
+			if (showIndividualFlightSummary)
 				group.footer(rotaryFlightSummarySubreport);
 			if (showIndividualMarketSummary)
 				group.footer(rotaryMarketSummarySubreport);
-			if (showTotalProgramSummary)
+			//if (showTotalProgramSummary)
 				group.footer(rotaryPackageSummarySubreport);
 			group.footer(networkSubreport);
 			if (showIndividualFlightSummary)
 				group.footer(networkFlightSummarySubreport);
 			if (showIndividualMarketSummary)
 				group.footer(networkMarketSummarySubreport);
-			if (showTotalProgramSummary)
+			//if (showTotalProgramSummary)
 				group.footer(networkPackageSummarySubreport);
 			// =================== subreport and summaries positioning: end
 
@@ -685,7 +678,6 @@ public class PdfReporter extends Reporter {
 			b.setSubtotalStyle(columnStyle);
 			b.setGroupStyle(groupHeaderStyleNew);
 			
-			System.out.println(" ****** shiping inst call ");
 			// =================== begin
 			// Shipping instructions is part of the Plan that is displayed after
 			// all Plan Data is rendered in PDF
@@ -703,9 +695,7 @@ public class PdfReporter extends Reporter {
 						.subreport(shippingInstructionsSubreportExpression)
 						.setDataSource(shippingInstructionsDataSource)
 						.removeLineWhenBlank();
-				System.out.println(" ****** adding shiping inst to sumary ");
 				b.summary(shippingInstructionsSubreport);
-				System.out.println(" ****** added shiping inst to sumary ");
 				//System.out.println(" doesShippingInstructionsExists "	+ doesShippingInstructionsExists);
 				if (doesShippingInstructionsExists) {
 					VerticalListBuilder autoValidDisclaimerReports = cmp
@@ -717,9 +707,7 @@ public class PdfReporter extends Reporter {
 					autoValidDisclaimerReports.add(cmp.text(
 							new AutoDisclaimerExpression()).setStyle(
 							summaryStyle));
-					System.out.println(" ****** adding autoValidDisclaimerReports to sumary ");
 					b.summary(autoValidDisclaimerReports);
-					System.out.println(" ******  autoValidDisclaimerReports added to sumary ");
 				}
 			}
 			// =================== end
@@ -730,10 +718,8 @@ public class PdfReporter extends Reporter {
 						+ StringUtils.join(getRequiredMissingFieldsList(b),
 								", "));
 			}
-			System.out.println(" ******  export to pdf start ");
 			// export
 			b.toPdf(Exporters.pdfExporter(getGeneratedReport("pdf")));
-			System.out.println(" ******  export to pdf end ");
 			// As DynamicReports doesn't have a method/property that return
 			// Table of Contents (TOC) entries for more info see here:
 			// http://www.dynamicreports.org/forum/viewtopic.php?f=1&t=416&sid=25edfbfe63ade19e637c1a79f5974ee1
@@ -743,9 +729,7 @@ public class PdfReporter extends Reporter {
 			// the TOC entries.
 			b.setTableOfContents(true);
 			b.rebuild();
-			System.out.println(" ******  export to csv start ");
 			b.toCsv(Exporters.csvExporter(getGeneratedReport("csv")));
-			System.out.println(" ******  export to csv end ");
 		} catch (JRException e) {
 			//System.out.println("Exception in Reporter: " + e.getMessage());
 			e.printStackTrace();
@@ -938,7 +922,7 @@ public class PdfReporter extends Reporter {
 		}
 		
 		// add column
-		report.addColumn(col.column("Summary", summaryField, type.stringType()).setWidth(Units.inch(2.0))
+		report.addColumn(col.column("Summary", summaryField, type.stringType())
 				.setHorizontalAlignment(HorizontalAlignment.LEFT));
 	}
 
@@ -1439,7 +1423,6 @@ public class PdfReporter extends Reporter {
 
 		@Override
 		public JasperReportBuilder evaluate(ReportParameters reportParameters) {
-			System.out.println(" ************* PackageFooterSubreportExpression  evaluate entered");
 			JasperReportBuilder report = report();
 			StyleBuilder boldStyle = stl.style().bold();
 			StyleBuilder summaryStyle = stl.style()
@@ -1455,7 +1438,6 @@ public class PdfReporter extends Reporter {
 			flightCommentReports.add(cmp.text(""));
 			report.summary(flightCommentReports);
 
-			System.out.println(" ************* PackageFooterSubreportExpression  evaluate flightCommentReports added ");
 			// create a vertical list of Valid disclaimer reports as per rules
 			ValidDisclaimerExistsExpression validDisclaimerExistsExpression = new ValidDisclaimerExistsExpression();
 			VerticalListBuilder validDisclaimerReports = cmp.verticalList();
@@ -1468,11 +1450,9 @@ public class PdfReporter extends Reporter {
 			report.summary(validDisclaimerReports);
 			// ======================================================== end
 
-			System.out.println(" ************* PackageFooterSubreportExpression  evaluate validDisclaimerReports addded to report summary ");
 			// add a blank line at the end
 			report.addLastPageFooter(cmp.text(""));
 
-			System.out.println(" ************* PackageFooterSubreportExpression  evaluate end ");
 			// return report
 			return report;
 		}
@@ -1495,6 +1475,8 @@ public class PdfReporter extends Reporter {
 
 		private SummaryLevelEnum summaryLevel;
 
+		private boolean showTotalProgramSummary = true;
+
 		public AudienceSubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
@@ -1502,37 +1484,44 @@ public class PdfReporter extends Reporter {
 				boolean showSummaryHeaders) {
 			this(dataSourceFileName,
 					packageMarketFlightPreviousRecordExpression,
-					columnTitleStyle, columnStyle, showSummaryHeaders, null);
+					columnTitleStyle, columnStyle, showSummaryHeaders, null, true);
 		}
 
 		public AudienceSubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
 				StyleBuilder columnTitleStyle, StyleBuilder columnStyle,
-				boolean showSummaryHeaders, SummaryLevelEnum summaryLevel) {
+				boolean showSummaryHeaders, SummaryLevelEnum summaryLevel, boolean showTotalProgramSummary) {
 			setDataSourceFileName(dataSourceFileName);
 			setPackageMarketFlightPreviousRecordExpression(packageMarketFlightPreviousRecordExpression);
 			setColumnTitleStyle(columnTitleStyle);
 			setColumnStyle(columnStyle);
 			setShowSummaryHeaders(showSummaryHeaders);
 			setSummaryLevel(summaryLevel);
+			this.showTotalProgramSummary = showTotalProgramSummary;
 		}
 
 		@Override
 		public JasperReportBuilder evaluate(ReportParameters reportParameters) {
 			JasperReportBuilder report = report();
 
+			report.addField(field("Id", type.stringType()));
+
+			if (showTotalProgramSummary) {
+
 			// add columns
 			addColumns(report, getFlightLineColumnLabelHashMap());
 
 			// add fields
 			report.addField(field("Package_Flight__r/Id", type.stringType()));
-			report.addField(field("Id", type.stringType()));
+
 
 			// style
 			report.highlightDetailEvenRows();
 			report.setColumnStyle(getColumnStyle());
 			report.setColumnTitleStyle(getColumnTitleStyle());
+
+			}
 			// filter
 			if (getSummaryLevel() == null) {
 				report.setFilterExpression(new FilterByFlightIdExpression(
@@ -1678,28 +1667,34 @@ public class PdfReporter extends Reporter {
 					planTRPColumn.setWidth(Units.inch(2));
 					report.addColumn(planTRPColumn);
 				}
+				
+							
 				if (key.equals("Plan_Imps_Reach_Perc__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> planImpsReachPercColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
+						TextColumnBuilder<BigDecimal> planImpsReachPercColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? ""
+										 : getFlightLineColumnLabelHashMap().get(
 										"Plan_Imps_Reach_Perc__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Reach_Perc__c"),
-										type.percentageType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						planImpsReachPercColumn.setWidth(Units.inch(1.5));
 						report.addColumn(planImpsReachPercColumn);
+						
 				} 
 				if (key.equals("Plan_Imps_Avg_Frequency__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> frequencyColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
-										"Plan_Imps_Avg_Frequency__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+						TextColumnBuilder<BigDecimal> frequencyColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "" 
+										: getFlightLineColumnLabelHashMap().get("Plan_Imps_Avg_Frequency__c"),
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Avg_Frequency__c"),
-										type.doubleType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
@@ -2126,6 +2121,8 @@ public class PdfReporter extends Reporter {
 
 		private SummaryLevelEnum summaryLevel;
 
+		private boolean showTotalProgramSummary;
+
 		public LocationSubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
@@ -2134,7 +2131,7 @@ public class PdfReporter extends Reporter {
 			this(dataSourceFileName,
 					packageMarketFlightPreviousRecordExpression,
 					columnTitleStyle, columnStyle, showSummaryHeaders,
-					locationMapExists, null);
+					locationMapExists, null, true);
 		}
 
 		public LocationSubreportExpression(
@@ -2142,7 +2139,7 @@ public class PdfReporter extends Reporter {
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
 				StyleBuilder columnTitleStyle, StyleBuilder columnStyle,
 				boolean showSummaryHeaders, boolean locationMapExists,
-				SummaryLevelEnum summaryLevel) {
+				SummaryLevelEnum summaryLevel, boolean showTotalProgramSummary) {
 			setDataSourceFileName(dataSourceFileName);
 			setPackageMarketFlightPreviousRecordExpression(packageMarketFlightPreviousRecordExpression);
 			setColumnTitleStyle(columnTitleStyle);
@@ -2150,25 +2147,30 @@ public class PdfReporter extends Reporter {
 			setShowSummaryHeaders(showSummaryHeaders);
 			setLocationMapExists(locationMapExists);
 			setSummaryLevel(summaryLevel);
+			this.showTotalProgramSummary = showTotalProgramSummary;
 		}
 
 		@Override
 		public JasperReportBuilder evaluate(ReportParameters reportParameters) {
 
-			System.out.println(" ************** LocationSubreportExpression evaluate  START getSummaryLevel() " +getSummaryLevel());
 			JasperReportBuilder report = report();
+
+			report.addField(field("Id", type.stringType()));
+
+			if (showTotalProgramSummary) {
 
 			// add columns
 			addColumns(report, getFlightLineColumnLabelHashMap());
 
 			// add fields
 			report.addField(field("Package_Flight__r/Id", type.stringType()));
-			report.addField(field("Id", type.stringType()));
+
 
 			// style
 			report.highlightDetailEvenRows();
 			report.setColumnStyle(getColumnStyle());
 			report.setColumnTitleStyle(getColumnTitleStyle());
+			}
 
 			// filter
 			if (getSummaryLevel() == null) {
@@ -2182,15 +2184,12 @@ public class PdfReporter extends Reporter {
 				// set filter by market
 				report.setFilterExpression(new FilterByPackageIdExpression(
 						getPackageMarketFlightPreviousRecordExpression()));
-				//System.out.println(" ************** LocationSubreportExpression evaluate. calling createPackageCommentsAndDisclamersFooter ");
-				//createPackageCommentsAndDisclamersFooter(
-					//	getDataSourceFileName(), report);
-				//System.out.println(" ************** LocationSubreportExpression evaluate createPackageCommentsAndDisclamersFooter done ");
+				createPackageCommentsAndDisclamersFooter(
+						getDataSourceFileName(), report);
 			}
 
 			// add a blank line at the end
 			report.addLastPageFooter(cmp.text(""));
-			System.out.println(" ************** LocationSubreportExpression evaluate  done  getSummaryLevel() " +getSummaryLevel());
 			return report;
 		}
 
@@ -2209,7 +2208,6 @@ public class PdfReporter extends Reporter {
 				if (isLocationMapExists()) {
 					if (key.equals("MapLocation_Number__c")) {
 						if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 1 ");
 							try {
 								TextColumnBuilder<Integer> mapLocNumberColumn = col
 										.column(getFlightLineColumnLabelHashMap()
@@ -2238,7 +2236,6 @@ public class PdfReporter extends Reporter {
 							}
 						} else {
 							if (!firstColumnOverriden) {
-								System.out.println(" 1 else ");
 								addSummaryField(getSummaryLevel(), report);
 								firstColumnOverriden = true;
 							}
@@ -2247,7 +2244,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Media_Category__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 2 ");
 						TextColumnBuilder<String> mediaTypeColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2259,7 +2255,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(mediaTypeColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 2 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2267,7 +2262,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Panel_Id_Label__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 3 ");
 						TextColumnBuilder<String> panelIdColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2281,7 +2275,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(panelIdColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 3 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2289,7 +2282,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("TAB_Id__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 4 ");
 						TextColumnBuilder<String> tabIdColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2303,7 +2295,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(tabIdColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 4 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2311,7 +2302,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Location_Description__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 5 ");
 						TextColumnBuilder<String> descriptionTextColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2325,7 +2315,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(descriptionTextColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 5 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2333,7 +2322,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Face_Direction__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 6 ");
 						TextColumnBuilder<String> flightLineTextColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2347,14 +2335,12 @@ public class PdfReporter extends Reporter {
 						report.addColumn(flightLineTextColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 6 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
 					}
 				}
 				if (key.equals("Weekly_Total_18_Imps__c")) {
-					System.out.println(" 7 ");
 					TextColumnBuilder<BigDecimal> weeklyTotal18ImpsColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"Weekly_Total_18_Imps__c"),
@@ -2369,7 +2355,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Weekly_Total_18_Imps_000__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 8 ");
 						TextColumnBuilder<BigDecimal> weeklyTotal18Imps000Column = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Weekly_Total_18_Imps_000__c"),
@@ -2382,14 +2367,12 @@ public class PdfReporter extends Reporter {
 						report.addColumn(weeklyTotal18Imps000Column);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 8 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
 					}
 				}
 				if (key.equals("In_Mkt_Imps__c")) {
-					System.out.println(" 9 ");
 					TextColumnBuilder<BigDecimal> targetInMarketImpsColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"In_Mkt_Imps__c"),
@@ -2403,7 +2386,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Target_In_Market_Imps_000__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 10 ");
 						TextColumnBuilder<BigDecimal> targetInMarketImps000Column = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Target_In_Market_Imps_000__c"),
@@ -2416,14 +2398,12 @@ public class PdfReporter extends Reporter {
 						report.addColumn(targetInMarketImps000Column);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 10 eose ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
 					}
 				}
 				if (key.equals("Total_Imps__c")) {
-					System.out.println(" 11 ");
 					TextColumnBuilder<BigDecimal> totalImpsColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"Total_Imps__c"),
@@ -2437,7 +2417,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Target_Total_Imps_000__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 12 ");
 						TextColumnBuilder<BigDecimal> totalImps000Column = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Target_Total_Imps_000__c"),
@@ -2450,7 +2429,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(totalImps000Column);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 12 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2458,7 +2436,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("WeeklyMarketImps__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 13 ");
 						TextColumnBuilder<BigDecimal> weeklyTotalTargetImpsColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"WeeklyMarketImps__c"),
@@ -2471,7 +2448,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(weeklyTotalTargetImpsColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 13 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2479,7 +2455,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Weekly_Total_Target_Imps_000__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 14 ");
 						TextColumnBuilder<BigDecimal> weeklyTotalTargetImps000Column = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Weekly_Total_Target_Imps_000__c"),
@@ -2492,7 +2467,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(weeklyTotalTargetImps000Column);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 14  else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2500,7 +2474,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("WeeklyInMarketImps__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 15 ");
 						TextColumnBuilder<BigDecimal> weeklyInMarketTargetImpsColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"WeeklyInMarketImps__c"),
@@ -2513,7 +2486,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(weeklyInMarketTargetImpsColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 15 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2521,7 +2493,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Weekly_In_Market_Target_Imps_000__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 16 ");
 						TextColumnBuilder<BigDecimal> weeklyInMarketTargetImps000Column = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Weekly_In_Market_Target_Imps_000__c"),
@@ -2535,14 +2506,12 @@ public class PdfReporter extends Reporter {
 						report.addColumn(weeklyInMarketTargetImps000Column);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 16 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
 					}
 				}
 				if (key.equals("In_Mkt_TRP__c")) {
-					System.out.println(" 17 ");
 					TextColumnBuilder<Double> weekklyTRPColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"In_Mkt_TRP__c"),
@@ -2555,7 +2524,6 @@ public class PdfReporter extends Reporter {
 					report.addColumn(weekklyTRPColumn);
 				}
 				if (key.equals("PlanTRP__c")) {
-					System.out.println(" 18 ");
 					TextColumnBuilder<Double> planTRPColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"PlanTRP__c"),
@@ -2567,38 +2535,42 @@ public class PdfReporter extends Reporter {
 					planTRPColumn.setWidth(Units.inch(2));
 					report.addColumn(planTRPColumn);
 				}
-				
 				if (key.equals("Plan_Imps_Reach_Perc__c")) {
-					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> planImpsReachPercColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
+						//if (!isShowSummaryHeaders() || firstColumnOverriden) 
+						TextColumnBuilder<BigDecimal> planImpsReachPercColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? ""
+										 : getFlightLineColumnLabelHashMap().get(
 										"Plan_Imps_Reach_Perc__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Reach_Perc__c"),
-										type.percentageType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						planImpsReachPercColumn.setWidth(Units.inch(1.5));
 						report.addColumn(planImpsReachPercColumn);
+						
 				} 
 				if (key.equals("Plan_Imps_Avg_Frequency__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> frequencyColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
-										"Plan_Imps_Avg_Frequency__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+						
+						TextColumnBuilder<BigDecimal> frequencyColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "" 
+										: getFlightLineColumnLabelHashMap().get("Plan_Imps_Avg_Frequency__c"),
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Avg_Frequency__c"),
-										type.doubleType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						frequencyColumn.setWidth(Units.inch(1.5));
 						report.addColumn(frequencyColumn);
+						
 					} 
 					if (key.equals("X4_Wk_Proposed_Price__c")) {
 						if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 21 ");
 						TextColumnBuilder<BigDecimal> X4WkProposedPriceColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2612,7 +2584,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(X4WkProposedPriceColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 22 ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2620,7 +2591,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Net_Amount_Value__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 23 ");
 						TextColumnBuilder<BigDecimal> subTotalPriceColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Net_Amount_Value__c"),
@@ -2632,14 +2602,12 @@ public class PdfReporter extends Reporter {
 						report.addColumn(subTotalPriceColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 23 else");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
 					}
 				}
 				if (key.equals("Total_Price_0d__c")) {
-					System.out.println(" 24");
 					TextColumnBuilder<BigDecimal> totalPriceColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"Total_Price_0d__c"),
@@ -2652,7 +2620,6 @@ public class PdfReporter extends Reporter {
 					report.addColumn(totalPriceColumn);
 				}
 				if (key.equals("TotalInMarketCPM_0d__c")) {
-					System.out.println(" 25 ");
 					TextColumnBuilder<BigDecimal> totalInMarketCPM0dColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"TotalInMarketCPM_0d__c"),
@@ -2665,7 +2632,6 @@ public class PdfReporter extends Reporter {
 					report.addColumn(totalInMarketCPM0dColumn);
 				}
 				if (key.equals("CPP_0d__c")) {
-					System.out.println(" 26 ");
 					TextColumnBuilder<BigDecimal> cppColumn = col.column(
 							getFlightLineColumnLabelHashMap().get("CPP_0d__c"),
 							getSummaryFieldNameRelatedToFlightLineFieldName(
@@ -2677,7 +2643,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Unit_Size__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 27 ");
 						TextColumnBuilder<String> unitSizeColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2691,7 +2656,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(unitSizeColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 27 else");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2699,7 +2663,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Illumination_yn__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 28 ");
 						TextColumnBuilder<String> illuminationColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2713,7 +2676,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(illuminationColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 28 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2721,7 +2683,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Comments__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 29 ");
 						TextColumnBuilder<String> commentsColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2735,7 +2696,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(commentsColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 29 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2743,7 +2703,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Timing__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 30 ");
 						TextColumnBuilder<String> timingColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2757,7 +2716,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(timingColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 30 else");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2765,7 +2723,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("In_Mkt_Perc_Comp__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 30 ");
 						TextColumnBuilder<BigDecimal> inMktPercCompColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2780,7 +2737,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(inMktPercCompColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 30 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2788,7 +2744,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("X4_Wk_Avg_Rate_per_Panel__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 31 ");
 						TextColumnBuilder<String> x4WkAverageRatePanelColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2802,7 +2757,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(x4WkAverageRatePanelColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 31 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2810,7 +2764,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Production__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 32  ");
 						TextColumnBuilder<BigDecimal> productionColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Production__c"), "Production__c",
@@ -2821,7 +2774,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(productionColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 32 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2829,7 +2781,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Additional_Cost__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 33 ");
 						TextColumnBuilder<BigDecimal> additionalCostColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Additional_Cost__c"),
@@ -2841,7 +2792,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(additionalCostColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 33 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2849,7 +2799,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Tax_Amt__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 34 ");
 						TextColumnBuilder<BigDecimal> taxAmtColumn = col
 								.column(getFlightLineColumnLabelHashMap().get(
 										"Tax_Amt__c"), "Tax_Amt__c",
@@ -2860,7 +2809,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(taxAmtColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 34 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2868,7 +2816,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Location__Longitude__s")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 35 ");
 						TextColumnBuilder<String> locationLangitudeColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2882,7 +2829,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(locationLangitudeColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 35 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2890,7 +2836,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Location__Latitude__s")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 36 ");
 						TextColumnBuilder<String> locationLatitudeColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2904,7 +2849,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(locationLatitudeColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 36 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2912,7 +2856,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Embellishments__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 37 ");
 						TextColumnBuilder<String> embellishmentsColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2926,7 +2869,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(embellishmentsColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 37 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2934,7 +2876,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Illumination__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 38 ");
 						TextColumnBuilder<BigDecimal> illuminationColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2949,7 +2890,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(illuminationColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 38 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2957,7 +2897,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Current_Copy__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 39 ");
 						TextColumnBuilder<String> currentCopyColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2971,7 +2910,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(currentCopyColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 39 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -2979,7 +2917,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("City__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 40 ");
 						TextColumnBuilder<String> cityColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -2992,7 +2929,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(cityColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 40 ese");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3000,7 +2936,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("County__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 41 ");
 						TextColumnBuilder<String> countryColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3014,7 +2949,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(countryColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 41 esle");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3022,7 +2956,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("State__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 42  ");
 						TextColumnBuilder<String> stateColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3035,7 +2968,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(stateColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 42 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3043,7 +2975,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Zip__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 43 ");
 						TextColumnBuilder<String> zipColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3056,7 +2987,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(zipColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 43 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3064,7 +2994,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Media_Product__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 44 ");
 						TextColumnBuilder<String> mediaProductColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3079,7 +3008,6 @@ public class PdfReporter extends Reporter {
 						;
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 44 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3087,7 +3015,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Ride_Order__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 45 ");
 						TextColumnBuilder<String> rideOrderColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3101,7 +3028,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(rideOrderColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 45 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3109,7 +3035,6 @@ public class PdfReporter extends Reporter {
 				}
 				if (key.equals("Facing__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
-						System.out.println(" 46 ");
 						TextColumnBuilder<String> faceSideColumn = col
 								.column(this.isShowSummaryHeaders() ? ""
 										: getFlightLineColumnLabelHashMap()
@@ -3123,7 +3048,6 @@ public class PdfReporter extends Reporter {
 						report.addColumn(faceSideColumn);
 					} else {
 						if (!firstColumnOverriden) {
-							System.out.println(" 46 else ");
 							addSummaryField(getSummaryLevel(), report);
 							firstColumnOverriden = true;
 						}
@@ -3133,7 +3057,6 @@ public class PdfReporter extends Reporter {
 						.isDigitalMediaCategory()) {
 					if (key.equals("Average_Daily_Spots__c")) {
 						if (!isShowSummaryHeaders() || firstColumnOverriden) {
-							System.out.println(" 47 ");
 							TextColumnBuilder<String> averageDailySpotsColumn = col
 									.column(this.isShowSummaryHeaders() ? ""
 											: getFlightLineColumnLabelHashMap()
@@ -3147,7 +3070,6 @@ public class PdfReporter extends Reporter {
 							report.addColumn(averageDailySpotsColumn);
 						} else {
 							if (!firstColumnOverriden) {
-								System.out.println(" 47 else ");
 								addSummaryField(getSummaryLevel(), report);
 								firstColumnOverriden = true;
 							}
@@ -3155,7 +3077,6 @@ public class PdfReporter extends Reporter {
 					}
 				}
 				if (key.equals("Discount__c")) {
-					System.out.println(" 48 ");
 					TextColumnBuilder<Double> discountColumn = col
 							.column(getFlightLineColumnLabelHashMap().get(
 									"Discount__c"),
@@ -3168,7 +3089,6 @@ public class PdfReporter extends Reporter {
 					report.addColumn(discountColumn);
 				}
 			}
-			System.out.println(" ************ location sub report addcolumns end ");
 			// return report
 			return report;
 		}
@@ -3248,6 +3168,8 @@ public class PdfReporter extends Reporter {
 
 		private SummaryLevelEnum summaryLevel;
 
+		private boolean showTotalProgramSummary;
+
 		public RotarySubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
@@ -3255,37 +3177,43 @@ public class PdfReporter extends Reporter {
 				boolean showSummaryHeaders) {
 			this(dataSourceFileName,
 					packageMarketFlightPreviousRecordExpression,
-					columnTitleStyle, columnStyle, showSummaryHeaders, null);
+					columnTitleStyle, columnStyle, showSummaryHeaders, null, true);
 		}
 
 		public RotarySubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
 				StyleBuilder columnTitleStyle, StyleBuilder columnStyle,
-				boolean showSummaryHeaders, SummaryLevelEnum summaryLevel) {
+				boolean showSummaryHeaders, SummaryLevelEnum summaryLevel, boolean showTotalProgramSummary) {
 			setDataSourceFileName(dataSourceFileName);
 			setPackageMarketFlightPreviousRecordExpression(packageMarketFlightPreviousRecordExpression);
 			setColumnTitleStyle(columnTitleStyle);
 			setColumnStyle(columnStyle);
 			setShowSummaryHeaders(showSummaryHeaders);
 			setSummaryLevel(summaryLevel);
+			this.showTotalProgramSummary = showTotalProgramSummary;
 		}
 
 		@Override
 		public JasperReportBuilder evaluate(ReportParameters reportParameters) {
 			JasperReportBuilder report = report();
 
+			report.addField(field("Id", type.stringType()));
+
+			if (showTotalProgramSummary) {
+
 			// add columns
 			addColumns(report, getFlightLineColumnLabelHashMap());
 
 			// add fields
 			report.addField(field("Package_Flight__r/Id", type.stringType()));
-			report.addField(field("Id", type.stringType()));
+
 
 			// style
 			report.highlightDetailEvenRows();
 			report.setColumnStyle(getColumnStyle());
 			report.setColumnTitleStyle(getColumnTitleStyle());
+			}
 
 			// filter
 			if (getSummaryLevel() == null) {
@@ -3402,34 +3330,39 @@ public class PdfReporter extends Reporter {
 							type.doubleType()).setHorizontalAlignment(
 							HorizontalAlignment.CENTER));
 				}
-					
-				if (key.equals("Plan_Imps_Reach_Perc__c")) {
+					if (key.equals("Plan_Imps_Reach_Perc__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> planImpsReachPercColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
+						TextColumnBuilder<BigDecimal> planImpsReachPercColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? ""
+										 : getFlightLineColumnLabelHashMap().get(
 										"Plan_Imps_Reach_Perc__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Reach_Perc__c"),
-										type.percentageType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						planImpsReachPercColumn.setWidth(Units.inch(1.5));
 						report.addColumn(planImpsReachPercColumn);
+						
 				} 
 				if (key.equals("Plan_Imps_Avg_Frequency__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> frequencyColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
-										"Plan_Imps_Avg_Frequency__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+					
+						TextColumnBuilder<BigDecimal> frequencyColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "" 
+										: getFlightLineColumnLabelHashMap().get("Plan_Imps_Avg_Frequency__c"),
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Avg_Frequency__c"),
-										type.doubleType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						frequencyColumn.setWidth(Units.inch(1.5));
 						report.addColumn(frequencyColumn);
+						
 					} 
 				if (key.equals("X4_Wk_Proposed_Price__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
@@ -3570,6 +3503,8 @@ public class PdfReporter extends Reporter {
 
 		private boolean excludeNetworkDetails;
 
+		private boolean showTotalProgramSummary;
+
 		public NetworkSubreportExpression(
 				String dataSourceFileName,
 				PackageMarketFlightPreviousRecordExpression packageMarketFlightPreviousRecordExpression,
@@ -3580,7 +3515,7 @@ public class PdfReporter extends Reporter {
 					packageMarketFlightPreviousRecordExpression,
 					flightLinePreviousRecordExpression, columnTitleStyle,
 					columnStyle, showSummaryHeaders, excludeNetworkDetails,
-					null);
+					null, true);
 		}
 
 		public NetworkSubreportExpression(
@@ -3589,8 +3524,7 @@ public class PdfReporter extends Reporter {
 				FlightLinePreviousRecordExpression flightLinePreviousRecordExpression,
 				StyleBuilder columnTitleStyle, StyleBuilder columnStyle,
 				boolean showSummaryHeaders, boolean excludeNetworkDetails,
-				SummaryLevelEnum summaryLevel) {
-			System.out.println(" ******	 NetworkSubreportExpression   const  ");	
+				SummaryLevelEnum summaryLevel, boolean showTotalProgramSummary) {
 			setDataSourceFileName(dataSourceFileName);
 			setPackageMarketFlightPreviousRecordExpression(packageMarketFlightPreviousRecordExpression);
 			setFlightLinePreviousRecordExpression(flightLinePreviousRecordExpression);
@@ -3599,12 +3533,12 @@ public class PdfReporter extends Reporter {
 			setShowSummaryHeaders(showSummaryHeaders);
 			setExcludeNetworkDetails(excludeNetworkDetails);
 			setSummaryLevel(summaryLevel);
+			this.showTotalProgramSummary = showTotalProgramSummary;
 		}
 
 		@Override
 		public JasperReportBuilder evaluate(ReportParameters reportParameters) {
 			JasperReportBuilder report = report();
-	System.out.println(" ******	 NetworkSubreportExpression   evaluate  ");	
 			// network detail dataset
 			JRXmlDataSource networkDetailDataSource = null;
 			try {
@@ -3616,6 +3550,7 @@ public class PdfReporter extends Reporter {
 				e.printStackTrace();
 			}
 
+			if (showTotalProgramSummary) {
 			report.title(cmp.text(""));
 
 			if (!isExcludeNetworkDetails()) {
@@ -3624,7 +3559,7 @@ public class PdfReporter extends Reporter {
 						.group(getFlightLinePreviousRecordExpression());
 				flightLinePreviousRecordCustomGroupBuilder
 						.setHeaderLayout(GroupHeaderLayout.EMPTY);
-				flightLinePreviousRecordCustomGroupBuilder.setPadding(0);
+				flightLinePreviousRecordCustomGroupBuilder.setPadding(0).setKeepTogether(true);
 				report.addGroup(flightLinePreviousRecordCustomGroupBuilder);
 
 				// create column group to re-render headers with each row
@@ -3656,11 +3591,14 @@ public class PdfReporter extends Reporter {
 			report.addField(field("Package_Flight__r/Id", type.stringType()));
 			report.addField(field("Package_Flight__r/Type__c",
 					type.stringType()));
-			report.addField(field("Id", type.stringType()));
 			report.addField(field("Parent_Flight_Line__c", type.stringType()));
 			report.addField(field(
 					"Package_Flight__r/Package_Market__r/Package__r/Id",
 					type.stringType()));
+			}
+
+
+            report.addField(field("Id", type.stringType()));
 
 			// filter
 			if (getSummaryLevel() == null) {
@@ -3800,34 +3738,40 @@ public class PdfReporter extends Reporter {
 									type.doubleType()).setPattern("##0.0")
 							.setHorizontalAlignment(HorizontalAlignment.RIGHT));
 				}
+					if (key.equals("Plan_Imps_Reach_Perc__c")) {
 					
-				if (key.equals("Plan_Imps_Reach_Perc__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> planImpsReachPercColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
+						TextColumnBuilder<BigDecimal> planImpsReachPercColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? ""
+										 : getFlightLineColumnLabelHashMap().get(
 										"Plan_Imps_Reach_Perc__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Reach_Perc__c"),
-										type.percentageType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						planImpsReachPercColumn.setWidth(Units.inch(1.5));
 						report.addColumn(planImpsReachPercColumn);
+						
 				} 
 				if (key.equals("Plan_Imps_Avg_Frequency__c")) {
 					//if (!isShowSummaryHeaders() || firstColumnOverriden) 
-						TextColumnBuilder<Double> frequencyColumn = col
-								.column(getFlightLineColumnLabelHashMap().get(
-										"Plan_Imps_Avg_Frequency__c"),
-										getSummaryFieldNameRelatedToFlightLineFieldName(
+						
+						TextColumnBuilder<BigDecimal> frequencyColumn = col
+								.column((this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "" 
+										: getFlightLineColumnLabelHashMap().get("Plan_Imps_Avg_Frequency__c"),
+										(this.isShowSummaryHeaders() && getSummaryLevel().equals(SummaryLevelEnum.Package)) ? "OB_Summ_Num__c"
+												: getSummaryFieldNameRelatedToFlightLineFieldName(
 											getSummaryLevel(), "Plan_Imps_Avg_Frequency__c"),
-										type.doubleType())
+										type.bigDecimalType())
 								.setHorizontalAlignment(
 										HorizontalAlignment.RIGHT)
 								.setPattern("##0.0");
 						frequencyColumn.setWidth(Units.inch(1.5));
 						report.addColumn(frequencyColumn);
+						
 					} 
 				if (key.equals("X4_Wk_Proposed_Price__c")) {
 					if (!isShowSummaryHeaders() || firstColumnOverriden) {
@@ -3920,6 +3864,26 @@ public class PdfReporter extends Reporter {
 												.get("Network_Notes__c"),
 								this.isShowSummaryHeaders() ? "Parent_Flight_Line__c"
 										: "Network_Notes__c", type.stringType()));
+					} else {
+						if (!firstColumnOverriden) {
+							addSummaryField(getSummaryLevel(), report);
+							firstColumnOverriden = true;
+						}
+					}
+				}
+				if (key.equals("Comments__c")) {
+					if (!isShowSummaryHeaders() || firstColumnOverriden) {
+						TextColumnBuilder<String> commentsColumn = col
+								.column(this.isShowSummaryHeaders() ? ""
+										: getFlightLineColumnLabelHashMap()
+												.get("Comments__c"),
+										this.isShowSummaryHeaders() ? "Parent_Flight_Line__c"
+												: "Comments__c",
+										type.stringType())
+								.setHorizontalAlignment(
+										HorizontalAlignment.LEFT);
+						commentsColumn.setWidth(Units.inch(3.5));
+						report.addColumn(commentsColumn);
 					} else {
 						if (!firstColumnOverriden) {
 							addSummaryField(getSummaryLevel(), report);
@@ -4255,6 +4219,7 @@ public class PdfReporter extends Reporter {
 							.setHorizontalAlignment(HorizontalAlignment.RIGHT));
 				}
 				if (key.equals("Plan_Imps_Reach_Perc__c")) {
+				
 					report.addColumn(col
 							.column(this.isShowSummaryHeaders() ? ""
 									: getFlightLineColumnLabelHashMap().get(
@@ -5674,6 +5639,7 @@ public class PdfReporter extends Reporter {
 		if (this.doesShippingInstructionsExists) {
 			PDFCombinerContentEntry pdfCombinerContentEntry = new PDFCombinerContentEntry();
 			pdfCombinerContentEntry.setTitle("Shipping Instructions");
+			
 			pdfCombinerContentEntry.setPageNumber(this
 					.getShippingInstructionsPageNumber() + 1);
 			// page number seems zero-index based, so adding one to it.

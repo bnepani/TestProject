@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.appirio.report.ValueFormatters.NumberFormatEnum;
 
 /**
@@ -26,6 +28,7 @@ public class FlightLine {
 	private String recordTypeId;
 	private Flight flight;
 	private String additionalCost;
+	private String additionalCostType;
 	private String averageDailySpots;
 	private String city;
 	private String comments;
@@ -77,6 +80,37 @@ public class FlightLine {
 	private String x4WkFloor;
 	private String x4WkProposedPrice;
 	private String zip;	
+	private String mediaCategory;
+	private Boolean additionalCostFieldSelected;
+
+
+
+	    public String getAdditionalCostType() {
+        return additionalCostType;
+    }
+
+    public void setAdditionalCostType(String additionalCostType) {
+        this.additionalCostType = additionalCostType;
+    }
+
+
+
+    public Boolean getAdditionalCostFieldSelected() {
+        return additionalCostFieldSelected;
+    }
+
+    public void setAdditionalCostFieldSelected(Boolean additionalCostFieldSelected) {
+        this.additionalCostFieldSelected = additionalCostFieldSelected;
+    }
+    
+	public String getMediaCategory() {
+		return mediaCategory;
+	}
+
+	public void setMediaCategory(String mediaCategory) {
+		this.mediaCategory = mediaCategory;
+	}
+
 
 	public Object getValue(String key) {
 
@@ -149,7 +183,10 @@ public class FlightLine {
 		if(key.equals("packageFlight_FlightComments")) return this.getFlight().getFlightComments();
 		if(key.equals("packageFlight_MarketName")) return this.getFlight().getMarketName();
 		if(key.equals("packageFlight_MarketType")) return this.getFlight().getMarketType();
-		if(key.equals("packageFlight_MediaCategory")) return this.getFlight().getMediaCategory();
+		if(key.equals("mediaCategory")) {
+			System.out.println(" ***************** media category key " +this.getMediaCategory());
+			return this.getMediaCategory();
+		}
 		if(key.equals("packageFlight_Name")) return this.getFlight().getName();
 		if(key.equals("packageFlight_PackageComments")) return this.getFlight().getPackageComments();
 		if(key.equals("packageFlight_PackageName")) return this.getFlight().getPackageName();
@@ -679,4 +716,11 @@ public class FlightLine {
 	public void setParentFlightLine(String parentFlightLine) {
 		this.parentFlightLine = parentFlightLine;
 	}
+	   public boolean isNumber(String key) {
+	       Object value = getValue(key);
+	        if (value == null) {
+	            return true;
+	        }
+	        return NumberUtils.isNumber(value.toString());
+	    }
 }

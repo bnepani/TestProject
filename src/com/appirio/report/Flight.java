@@ -104,6 +104,7 @@ public class Flight {
 		this.marketType = marketType;
 	}
 
+    
 	public String getMediaCategory() {
 		return mediaCategory;
 	}
@@ -111,7 +112,6 @@ public class Flight {
 	public void setMediaCategory(String mediaCategory) {
 		this.mediaCategory = mediaCategory;
 	}
-
 	public String getPackageComments() {
 		return packageComments;
 	}

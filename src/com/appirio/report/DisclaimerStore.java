@@ -1,10 +1,13 @@
 package com.appirio.report;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +85,7 @@ public class DisclaimerStore {
 					//check if flight line additional cost field is selected
 					if(isAdditionalCostFieldSelected){
 							//check flight line additional cost value
-						if (flightLineAdditonalCostFieldValue != null && flightLineAdditonalCostFieldValue != "0.0" 
+						if (flightLineAdditonalCostFieldValue != null && parseDouble(flightLineAdditonalCostFieldValue) > 0
 								&& StringUtils.isNotEmpty(flightLineAdditionalCostType)
 								&& flightLineAdditionalCostType.equals(wrapper.getAdditionalCostType())) {
 							  	includeDisclaimer = true;
@@ -106,7 +109,23 @@ public class DisclaimerStore {
 		
 		return validDisclaimersList ;
 	}
-	
+
+	private static double parseDouble(String value) {
+		System.out.println(" ************* parseDouble " + value);
+	    try {
+	        return NumberFormat.getNumberInstance(Locale.US).parse(value).doubleValue();
+	    } catch (ParseException e) {
+
+	    }
+	    try {
+            return NumberFormat.getCurrencyInstance(Locale.US).parse(value).doubleValue();
+        } catch (ParseException e) {
+
+        }
+	    
+	    return 0;
+	}
+
 	public Set<String> getValidDisclaimers (String flightName,String flightMarket, String flightMediaCategory) {
 		Set<String> validDisclaimersTextSet = new HashSet<String>();
 		for(DisclaimerWrapper wrapper : disclaimerWrapperList) {

@@ -1,20 +1,27 @@
 package com.appirio.report;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.processor.RowProcessor;
+import net.sf.jxls.transformer.Row;
 import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.xml.sax.SAXException;
 
 import com.appirio.PDFCombinerFile;
@@ -36,9 +43,11 @@ public class ExcelReporter extends Reporter {
 	 */
 	//private static final String XlsTemplateFileName = System.getenv("XLS_TEMPLATE_DIR") + File.separator + System.getenv("XLS_TEMPLATE_FILE");
 	//private static final String XlsTemplateFileName = "C:/Documents and Settings/admin/Desktop/proposal-template.xlsx";
-	
-	private static final String XlsTemplateFileName = "E:/eclipse-java-indigo-SR2-win32/eclipse/workspace/TestProject/xls-templates/proposal-template.xlsx";
-	
+
+	private static final String XlsTemplateFileName = "xls-templates/proposal-template.xlsx";
+
+	private static Map<CellStyle, CellStyle> rightAlignStyles = new HashMap<CellStyle, CellStyle>();
+
 	/**
 	 * XML proposal data source
 	 */
@@ -221,6 +230,10 @@ public class ExcelReporter extends Reporter {
 
 		// update flight line map panel locations
 		setMapPanelSortSequence(packages, mapPanelOrderPreferences);
+
+		for (FlightLine flightLine : packages.getFlightLines()) {
+		    flightLine.setAdditionalCostFieldSelected(flightLineColumnLabelHashMap.containsKey("Additional_Cost__c"));
+		}
 
 		// sort flight lines by map location (sort position)
 		packages.sortFlightLines();
@@ -647,6 +660,44 @@ public class ExcelReporter extends Reporter {
 		return getReporter().getDisclaimerStore().getValidDisclaimers(flightName, division, mediaCategory);
 	}
 
+	private List<DisclaimerStore.DisclaimerWrapper> validAllDisclaimersList = new ArrayList<DisclaimerStore.DisclaimerWrapper>();
+
+
+	   /**
+     * Get disclaimers for a flight, division and media category
+     * @param flightName
+     * @param division
+     * @param mediaCategory
+     * @return Set of discaimers
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParseException
+     */
+    public boolean getDisclaimers(String flightName, String division, String mediaCategory, Boolean isAdditionalCostFieldSelected, String flightLineAdditionalCostValue, String additionalCostType ) throws ParserConfigurationException, SAXException, IOException, ParseException {
+
+    	System.out.println("  getDisclaimers flightName " + flightName + " division " + division + " mediaCategory " + mediaCategory + " isAdditionalCostFieldSelected " + isAdditionalCostFieldSelected
+    			+ " flightLineAdditionalCostValue " + flightLineAdditionalCostValue + " additionalCostType " + additionalCostType);
+
+    	validAllDisclaimersList.addAll(getReporter().getDisclaimerStore()
+                .getValidDisclaimers_Cost(flightName, division, mediaCategory, isAdditionalCostFieldSelected == null ? false : isAdditionalCostFieldSelected, flightLineAdditionalCostValue, additionalCostType));
+    	return false;
+    }
+
+    public List<String> getDisclaimers() {
+        List<String> validDisclaimersListDisplay = new ArrayList<String>();
+        Collections.sort(validAllDisclaimersList);
+
+        for (DisclaimerStore.DisclaimerWrapper discWrapper : validAllDisclaimersList) {
+            //System.out.println("******** DisclaimerExpression : valid disc " + discWrapper.sequenceInt + " disclaimer "   + discWrapper.disclaimerText);
+            if (!validDisclaimersListDisplay
+                    .contains(discWrapper.disclaimerText)) {
+                validDisclaimersListDisplay.add(discWrapper.disclaimerText);
+            }
+        }
+        return validDisclaimersListDisplay;
+    }
+
 	/**
 	 * Build Reporter object and runs its associated DisclaimersDataExpression build passing the disclaimers datasource.
 	 */
@@ -761,9 +812,54 @@ public class ExcelReporter extends Reporter {
 
 		// run xls transformation
 		XLSTransformer transformer = new XLSTransformer();
-        //transformer.registerRowProcessor(new StyleRowProcessor("flightLines"));
-		transformer.transformXLS(proposalTemplateFileName, beans, proposalOutputFileName);
-	}
+        transformer.registerRowProcessor(new RowProcessor() {
+
+            @Override
+            public void processRow(Row row, Map namedCells) {
+
+                for (org.apache.poi.ss.usermodel.Cell sscell : row.getPoiRow()) {
+                    String value = null;
+                    boolean number = false;
+                    try {
+                        value = sscell.getStringCellValue();
+                        if (value == null) {
+                            continue;
+                        }
+
+                        try {
+                            NumberFormat.getInstance(Locale.US).parse(value);
+                            number = true;
+                        } catch (ParseException e) {
+                        }
+
+                        try {
+                            NumberFormat.getCurrencyInstance(Locale.US).parse(value);
+                            number = true;
+                        } catch (ParseException e) {
+
+                        }
+                    } catch (IllegalStateException e) {
+                        number = true;
+                    }
+                    if (number) {
+                        if (sscell.getCellStyle().getAlignment() != CellStyle.ALIGN_RIGHT) {
+                            if (rightAlignStyles.containsKey(sscell.getCellStyle())) {
+                                sscell.setCellStyle(rightAlignStyles.get(sscell.getCellStyle()));
+                            } else {
+                                CellStyle newCellStyle = row.getSheet().getWorkbook().getPoiWorkbook().createCellStyle();
+                                newCellStyle.cloneStyleFrom(sscell.getCellStyle());
+                                newCellStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+                                rightAlignStyles.put(sscell.getCellStyle(), newCellStyle);
+                                sscell.setCellStyle(newCellStyle);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        transformer.transformXLS(proposalTemplateFileName, beans, proposalOutputFileName);
+    }
 
 	/**
 	 * @return Map of xml field name and local bean property for this buy type
@@ -790,7 +886,7 @@ public class ExcelReporter extends Reporter {
 			audienceReportColumnMap.put("Package_Flight__r/Flight_Comments__c", "packageFlight_FlightComments");
 			audienceReportColumnMap.put("Package_Flight__r/Market_Name__c", "packageFlight_MarketName");
 			audienceReportColumnMap.put("Package_Flight__r/Market_Type__c", "packageFlight_MarketType");
-			audienceReportColumnMap.put("Package_Flight__r/Media_Category__c", "packageFlight_MediaCategory");
+			audienceReportColumnMap.put("Media_Category__c", "mediaCategory");
 			audienceReportColumnMap.put("Package_Flight__r/Name", "packageFlight_Name");
 			audienceReportColumnMap.put("Package_Flight__r/Package_Comments__c", "packageFlight_PackageComments");
 			audienceReportColumnMap.put("Package_Flight__r/Package_Name__c", "packageFlight_PackageName");
@@ -861,7 +957,7 @@ public class ExcelReporter extends Reporter {
 			locationReportColumnMap.put("Package_Flight__r/Flight_Comments__c", "packageFlight_FlightComments");
 			locationReportColumnMap.put("Package_Flight__r/Market_Name__c", "packageFlight_MarketName");
 			locationReportColumnMap.put("Package_Flight__r/Market_Type__c", "packageFlight_MarketType");
-			locationReportColumnMap.put("Package_Flight__r/Media_Category__c", "packageFlight_MediaCategory");
+			locationReportColumnMap.put("Media_Category__c", "mediaCategory");
 			locationReportColumnMap.put("Package_Flight__r/Name", "packageFlight_Name");
 			locationReportColumnMap.put("Package_Flight__r/Package_Comments__c", "packageFlight_PackageComments");
 			locationReportColumnMap.put("Package_Flight__r/Package_Name__c", "packageFlight_PackageName");
@@ -961,7 +1057,7 @@ public class ExcelReporter extends Reporter {
 			networkReportColumnMap.put("Package_Flight__r/Division__c", "packageFlight_Division");
 			networkReportColumnMap.put("Package_Flight__r/Duration_And_Type__c", "packageFlight_DurationAndType");
 			networkReportColumnMap.put("Package_Flight__r/Flight_Comments__c", "packageFlight_FlightComments");
-			networkReportColumnMap.put("Package_Flight__r/Media_Category__c", "packageFlight_MediaCategory");
+			networkReportColumnMap.put("Media_Category__c", "mediaCategory");
 			networkReportColumnMap.put("Package_Flight__r/Name", "packageFlight_Name");
 			networkReportColumnMap.put("Package_Flight__r/Package_Comments__c", "packageFlight_PackageComments");
 			networkReportColumnMap.put("Package_Flight__r/Package_Name__c", "packageFlight_PackageName");
@@ -977,6 +1073,7 @@ public class ExcelReporter extends Reporter {
 			networkReportColumnMap.put("X4_Wk_Base_Rate__c", "x4WkBaseRate");
 			networkReportColumnMap.put("X4_Wk_Floor__c", "x4WkFloor");
 			networkReportColumnMap.put("X4_Wk_Proposed_Price__c", "x4WkProposedPrice");
+			networkReportColumnMap.put("Comments__c", "comments");
 		}
 
 		return networkReportColumnMap;
